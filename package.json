@@ -28,7 +28,16 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "no-var": "error",
+      "no-console": "warn",
+      "prefer-const": "error",
+      "no-use-before-define": "error",
+      "semi": "error",
+      "no-multi-spaces": "error",
+      "no-multiple-empty-lines": "error"
+    }
   },
   "browserslist": {
     "production": [

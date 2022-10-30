@@ -1,0 +1,51 @@
+name: build_release
+run-name: ${{ github.actor }} started building release ${{ github.ref_name }}
+
+on:
+  push:
+    tags:
+      - 'rc-0.0.*'
+
+jobs:
+  check_ts_lint_call:
+    name: check ts errors and linter rules
+    uses: ./.github/workflows/check_ts_lint.yml
+
+  build_release:
+    name: build release
+    needs: check_ts_lint_call
+    runs-on: ubuntu-latest
+    steps:
+      - name: checking out repository onto the runner
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: install Node.js v16.16.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.16.0'
+        
+      - name: install all dependencies
+        run: |
+          cd .github/workflows/ticket_update
+          npm i
+
+      - name: update ticket
+        env:
+          ACTOR: ${{ github.actor }}
+          RELEASE: ${{ github.ref_name }}
+          OAUTH: ${{ secrets.OAUTH }}
+          ORG_ID: ${{ secrets.ORG_ID }}
+        run: |
+          cd .github/workflows/ticket_update
+          node updateTicket.js
+
+      - name: create comment
+        env:
+          RELEASE: ${{ github.ref_name }}
+          OAUTH: ${{ secrets.OAUTH }}
+          ORG_ID: ${{ secrets.ORG_ID }}
+        run: |
+          cd .github/workflows/ticket_update
+          node createComment.js

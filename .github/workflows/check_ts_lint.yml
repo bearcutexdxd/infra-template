@@ -1,0 +1,32 @@
+name: check_ts_lint
+run-name: ${{ github.actor }} started checking files for ts errors and compliance with linter rules
+
+on:
+  push:
+    branches:
+      - '**'
+    tags-ignore:
+      - 'rc-0.0.[0-9]+'
+  workflow_call:
+
+jobs:
+  check_ts_lint:
+    name: check ts errors and linter rules
+    runs-on: ubuntu-latest
+    steps:
+      - name: checking out repository onto the runner
+        uses: actions/checkout@v3
+
+      - name: install Node.js v16.16.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.16.0'
+        
+      - name: install all dependencies
+        run: npm ci
+
+      - name: checking compliance with linter rules
+        run: npm run lint
+
+      - name: run ts tests
+        run: npm run ts
