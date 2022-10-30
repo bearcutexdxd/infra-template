@@ -11,7 +11,7 @@ async function createComment() {
         "X-Org-ID": ORG_ID,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ text: `Собрали образ в тегом ${RELEASE}` })
+      body: JSON.stringify({ text: `Собрали образ c тегом ${RELEASE}` })
     })
 
     if (response.ok) {

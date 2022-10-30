@@ -41,6 +41,9 @@ jobs:
           cd .github/workflows/ticket_update
           node updateTicket.js
 
+      - name: create docker image
+        run: docker build -t ${{ github.ref_name }} .
+
       - name: create comment
         env:
           RELEASE: ${{ github.ref_name }}
